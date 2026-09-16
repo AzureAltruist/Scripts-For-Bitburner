@@ -1,4 +1,9 @@
-/** @param {NS} ns */
+/** @param {NS} ns
+ *
+ * Standard rooting pass: Scans the whole network and nukes anything it can
+ * with currently-owned port crackers. Split out of hack-manager.js so the
+ * main loop doesn't have to pay RAM for brutessh/ftpcrack/etc every cycle
+ */
 export async function main(ns) {
     for (const host of scanAll(ns)) {
         tryRoot(ns, host);
@@ -38,7 +43,7 @@ function tryRoot(ns, host) {
             ns.nuke(host);
             ns.print(`Rooted ${host}`);
         } catch {
-            // not enough ports opened, or some other issue
+            // not enough ports actually opened, or some other issue - skips silently
         }
     }
 }

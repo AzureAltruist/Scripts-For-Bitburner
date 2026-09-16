@@ -1,20 +1,19 @@
 /** @param {NS} ns
- * WIP (Work In Progress) Script
- * 
+ *
+ * Continuous HWGW batcher - single best target.
  * Requires hack.js, grow.js, weaken.js, root-servers.js on home alongside
  * this file.
- * 
  */
 
 const HOME = "home";
 const ROOT_SCRIPT = "root-servers.js";
 
-const HACK_PERCENT = 0.25; // steals this fraction of max money per. batch.
-const SPACER_MS = 50; // gap between each piece landing within a batch.
-const LAUNCH_INTERVAL_MS = 250; // how often it tries launching a new batch.
-const PREP_SECURITY_MARGIN = 1; // how tight to pull security in before batching starts.
-const RETARGET_INTERVAL_MS = 60000; // how often to check if a greater target exists.
-const CORRECTION_SECURITY_MARGIN = 15; // if security drifts "this" far above min, pause and fix it.
+const HACK_PERCENT = 0.25;             // steals this fraction of max money per. batch.
+const SPACER_MS = 50;                  // the gap between each piece landing within a batch.
+const LAUNCH_INTERVAL_MS = 250;        // how often to try launching a new batch.
+const PREP_SECURITY_MARGIN = 1;        // how "tight" to pull security in before batching starts
+const RETARGET_INTERVAL_MS = 60000;    // how often to check if a greater target exists
+const CORRECTION_SECURITY_MARGIN = 15; // if security drifts this far above min, pause and fix it
 
 export async function main(ns) {
     ns.disableLog("ALL");
@@ -33,7 +32,7 @@ export async function main(ns) {
         ns.print(`=== Targeting ${target} ===`);
         await prepServer(ns, target, PREP_SECURITY_MARGIN);
         await runBatcher(ns, target, RETARGET_INTERVAL_MS);
-        // runBatcher returns when it decides a better target exists it loop back around to re-pick and re-prep.
+        // runBatcher returns when it decides a better target exists and loops back around to re-pick and re-prep.
     }
 }
 
@@ -123,7 +122,7 @@ function totalFreeRam(ns) {
 }
 
 // Blocker: Distributes threads across your network and WAITS for completion.
-// Should be Used only during prep/correction, where it need the target settled before moving to the next
+// Used only during prep/correction, where the target settled before moving on.
 async function runActionBlocking(ns, script, target, threadsWanted) {
     const scriptRam = ns.getScriptRam(script, HOME);
     const hosts = getExecutionHosts(ns, scriptRam);
@@ -154,7 +153,7 @@ async function runActionBlocking(ns, script, target, threadsWanted) {
 }
 
 // Non-blocker: Distributes threads across the network with a landing delay
-// which is baked into each worker's args, fires them off, and returns immediately.
+// baked into each worker's args, and fires them off, and returns immediately.
 async function launchBatchPart(ns, script, target, delayMs, threadsWanted) {
     const scriptRam = ns.getScriptRam(script, HOME);
     const hosts = getExecutionHosts(ns, scriptRam);
@@ -171,7 +170,7 @@ async function launchBatchPart(ns, script, target, delayMs, threadsWanted) {
         if (pid !== 0) remaining -= threads;
     }
 
-    return threadsWanted - remaining; // threads that actually launched
+    return threadsWanted - remaining; // threads actually launched afterward
 }
 
 // --- Prep phase (blocking, gets the target to min security / max money) --
@@ -214,7 +213,6 @@ async function runBatcher(ns, target, retargetIntervalMs) {
     let lastRetargetCheck = Date.now();
 
     while (true) {
-        // IF-statement to secure if has drifted off too far, pause and correct instead of digging deeper in the network.
         const currentSecurity = ns.getServerSecurityLevel(target);
         const minSecurity = ns.getServerMinSecurityLevel(target);
         if (currentSecurity > minSecurity + CORRECTION_SECURITY_MARGIN) {
@@ -222,7 +220,8 @@ async function runBatcher(ns, target, retargetIntervalMs) {
             await prepServer(ns, target, PREP_SECURITY_MARGIN);
         }
 
-        // Periodically checks whether a meaningfully "better" target has appeared
+        // Periodically check whether a better target has appeared
+        // (e.g. hacking level went up). Only bail out if it's "better".
         if (Date.now() - lastRetargetCheck > retargetIntervalMs) {
             lastRetargetCheck = Date.now();
             const candidate = pickBestTarget(ns);
