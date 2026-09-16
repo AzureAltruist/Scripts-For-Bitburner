@@ -36,7 +36,8 @@ Scripts for passively earning faction reputation using idle RAM.
 - `compare-targets.js` — diagnostic tool that lists every rooted, hackable server ranked by the same scoring formula the batchers use, along with the raw stats behind each score.
 - `stock-trader.js` — a 4S-data-driven stock trading bot that goes long/short based on forecast confidence, with volatility filtering and capped position sizing.
 
-After downloading a folder go into the Bitburner Terminal and run **"upload ."** or **" upload {name of folder/file}"**
+## How to use & download scripts
+After downloading a folder go into the Bitburner Terminal and run **"upload ."** or **" upload "**
 
 ## License
 MIT — see [LICENSE](LICENSE).
