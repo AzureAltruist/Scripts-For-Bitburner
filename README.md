@@ -3,7 +3,7 @@
 A personal collection of JavaScript scripts I write and use while playing [Bitburner](https://bitburner-official.github.io/). 
 The scripts cover automated hacking (HWGW batching), server rooting, faction reputation grinding, and stock market trading.
 
-> **Note on workflow:** These scripts are written and tested *inside the game itself*, using Bitburner's built-in script editor (it's Vim mode), not in this repo directly. I don't clone/open this repo locally, branch, or PR against it mostly — it's simply a backup/showcase of scripts that are actively developed in-game. Because of that, some scripts here may be older or slightly out of sync with what I'm currently running, and there's no branch history to track iteration – just periodic pushes of whatever's working at the time (Currently Version 3.0.1).
+> **Note on workflow:** These scripts are mostly written and tested *inside the game itself*, using Bitburner's built-in script editor (it's Vim mode), not in this repo directly. I don't clone/open this repo locally, branch, or PR against it mostly — it's simply a backup/showcase of scripts that are actively developed in-game. Because of that, some scripts here may be older or slightly out of sync with what I'm currently running, and there's no branch history to track iteration – just periodic pushes of whatever's working at the time (Currently Version 3.0.1).
 
 ## Folder overview
 
@@ -36,6 +36,7 @@ Scripts for passively earning faction reputation using idle RAM.
 - `compare-targets.js` — diagnostic tool that lists every rooted, hackable server ranked by the same scoring formula the batchers use, along with the raw stats behind each score.
 - `stock-trader.js` — a 4S-data-driven stock trading bot that goes long/short based on forecast confidence, with volatility filtering and capped position sizing.
 
-## License
+After downloading a folder go into the Bitburner Terminal and run **"upload ."** or **" upload {name of folder/file}"**
 
+## License
 MIT — see [LICENSE](LICENSE).
