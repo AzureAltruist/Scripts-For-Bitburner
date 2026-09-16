@@ -1,10 +1,7 @@
 /** @param {NS} ns
  *
- * Pure drain: repeatedly hacks ONE target for everything it currently has,
+ * Pure drain: Repeatedly hacks ONE target for everything it currently has,
  * ignoring security/weaken/grow entirely, until its money hits ~$0.
- * As security climbs (since nothing weakens it), hack chance drops and later
- * passes may fail or steal less - which is expected for a pure-hack script.
- *
  * Run with: run drain-hack.js <target>
  * e.g.:     run drain-hack.js foodnstuff
  */
@@ -41,7 +38,7 @@ export async function main(ns) {
             break;
         }
 
-        // Threads needed to steal ~everything currently on the server, at
+        // Threads needed to steal everything currently on the server, at
         // the server's CURRENT security level (recalculated every pass).
         const threadsNeeded = Math.max(1, Math.ceil(ns.hackAnalyzeThreads(target, money)));
         ns.print(`${target}: $${Math.floor(money).toLocaleString()} left -> hacking (${threadsNeeded} threads wanted)`);
@@ -55,7 +52,7 @@ export async function main(ns) {
     ns.tprint(`Done draining ${target}. Total stolen: ~$${Math.floor(totalStolen).toLocaleString()}`);
 }
 
-// --- Network helpers (self-contained) ---
+// --- Network helpers ---
 
 function scanAll(ns) {
     const visited = new Set(["home"]);
