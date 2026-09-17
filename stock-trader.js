@@ -35,7 +35,7 @@ export async function main(ns) {
 
     // --- Behavior ---
     ENABLE_SHORTS: true,         // Auto-disabled if short selling isn't unlocked yet
-    TICK_MS: ns.stock.nextUpdate(),  // How often to check prices
+    TICK_MS: 6000,               // How often to check prices
     LOG_INTERVAL_TICKS: 10,      // Print a portfolio summary every N ticks
   };
 
